@@ -24,8 +24,8 @@ from persona_private.ai.agent import rag, mistral7b_llm
 docs = load_docs(path="persona_private/ai/files")
 print("docs>>", docs)
 
-# retriever = doc2chroma(docs=docs, persist_directory="docs_chromadb")
-# print("retriever>>", retriever)
+retriever = doc2chroma(docs=docs, persist_directory="docs_chromadb")
+print("retriever>>", retriever)
 
 retriever = get_retriever(persist_directory="docs_chromadb")
 print("retriever>>", retriever)
