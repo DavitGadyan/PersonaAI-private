@@ -24,107 +24,116 @@ from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 
 from dotenv import load_dotenv
 load_dotenv()
-
+from langchain.llms import Ollama
+from langchain.callbacks.manager import CallbackManager
 from huggingface_hub import login
 login(token=os.environ["SECRET_HF"])
 
 def mistral7b_llm():
-    '''Load LLM Mistral 7B
-    '''
-    #################################################################
-    # Tokenizer
-    #################################################################
+    llm = Ollama(  model="mistral",
+                    #model='Llama2',
+                    callback_manager = CallbackManager([StreamingStdOutCallbackHandler()]))
+    
+    
+    return llm
 
-    model_name='mistralai/Mistral-7B-Instruct-v0.1'
+# def mistral7b_llm():
+#     '''Load LLM Mistral 7B
+#     '''
+#     #################################################################
+#     # Tokenizer
+#     #################################################################
 
-    model_config = transformers.AutoConfig.from_pretrained(
-        model_name,
-    )
+#     model_name='mistralai/Mistral-7B-Instruct-v0.1'
 
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True, token=os.environ["SECRET_HF"])
-    tokenizer.pad_token = tokenizer.eos_token
-    tokenizer.padding_side = "right"
+#     model_config = transformers.AutoConfig.from_pretrained(
+#         model_name,
+#     )
 
-    #################################################################
-    # bitsandbytes parameters
-    #################################################################
+#     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True, token=os.environ["SECRET_HF"])
+#     tokenizer.pad_token = tokenizer.eos_token
+#     tokenizer.padding_side = "right"
 
-    # Activate 4-bit precision base model loading
-    use_4bit = True
+#     #################################################################
+#     # bitsandbytes parameters
+#     #################################################################
 
-    # Compute dtype for 4-bit base models
-    bnb_4bit_compute_dtype = "float16"
+#     # Activate 4-bit precision base model loading
+#     use_4bit = True
 
-    # Quantization type (fp4 or nf4)
-    bnb_4bit_quant_type = "nf4"
+#     # Compute dtype for 4-bit base models
+#     bnb_4bit_compute_dtype = "float16"
 
-    # Activate nested quantization for 4-bit base models (double quantization)
-    use_nested_quant = False
+#     # Quantization type (fp4 or nf4)
+#     bnb_4bit_quant_type = "nf4"
 
-    #################################################################
-    # Set up quantization config
-    #################################################################
-    compute_dtype = getattr(torch, bnb_4bit_compute_dtype)
+#     # Activate nested quantization for 4-bit base models (double quantization)
+#     use_nested_quant = False
 
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=use_4bit,
-        bnb_4bit_quant_type=bnb_4bit_quant_type,
-        bnb_4bit_compute_dtype=compute_dtype,
-        bnb_4bit_use_double_quant=use_nested_quant,
+#     #################################################################
+#     # Set up quantization config
+#     #################################################################
+#     compute_dtype = getattr(torch, bnb_4bit_compute_dtype)
+
+#     bnb_config = BitsAndBytesConfig(
+#         load_in_4bit=use_4bit,
+#         bnb_4bit_quant_type=bnb_4bit_quant_type,
+#         bnb_4bit_compute_dtype=compute_dtype,
+#         bnb_4bit_use_double_quant=use_nested_quant,
         
-    )
+#     )
 
-    # Check GPU compatibility with bfloat16
-    if compute_dtype == torch.float16 and use_4bit:
-        major, _ = torch.cuda.get_device_capability()
-        if major >= 8:
-            print("=" * 80)
-            print("Your GPU supports bfloat16: accelerate training with bf16=True")
-            print("=" * 80)
+#     # Check GPU compatibility with bfloat16
+#     if compute_dtype == torch.float16 and use_4bit:
+#         major, _ = torch.cuda.get_device_capability()
+#         if major >= 8:
+#             print("=" * 80)
+#             print("Your GPU supports bfloat16: accelerate training with bf16=True")
+#             print("=" * 80)
 
-    #################################################################
-    # Load pre-trained config
-    #################################################################
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        token=os.environ["SECRET_HF"],
-        quantization_config=bnb_config,
-    )
+#     #################################################################
+#     # Load pre-trained config
+#     #################################################################
+#     model = AutoModelForCausalLM.from_pretrained(
+#         model_name,
+#         token=os.environ["SECRET_HF"],
+#         quantization_config=bnb_config,
+#     )
 
-    text_generation_pipeline = transformers.pipeline(
-        model=model,
-        tokenizer=tokenizer,
-        task="text-generation",
-        temperature=0.2,
-        repetition_penalty=1.1,
-        return_full_text=True,
-        max_new_tokens=300,
-    )
+#     text_generation_pipeline = transformers.pipeline(
+#         model=model,
+#         tokenizer=tokenizer,
+#         task="text-generation",
+#         temperature=0.2,
+#         repetition_penalty=1.1,
+#         return_full_text=True,
+#         max_new_tokens=300,
+#     )
 
-    prompt_template = """
-    ### [INST] 
-    Instruction: Answer the question based on your knowledge. Here is context to help:
+#     prompt_template = """
+#     ### [INST] 
+#     Instruction: Answer the question based on your knowledge. Here is context to help:
 
-    {context}
+#     {context}
 
-    ### QUESTION:
-    {question} 
+#     ### QUESTION:
+#     {question} 
 
-    [/INST]
-    """
+#     [/INST]
+#     """
 
-    mistral_llm = HuggingFacePipeline(pipeline=text_generation_pipeline)
+#     mistral_llm = HuggingFacePipeline(pipeline=text_generation_pipeline)
 
-    # Create prompt from prompt template 
-    prompt = PromptTemplate(
-        input_variables=["context", "question"],
-        template=prompt_template,
-    )
+#     # Create prompt from prompt template 
+#     prompt = PromptTemplate(
+#         input_variables=["context", "question"],
+#         template=prompt_template,
+#     )
 
-    # Create llm chain 
-    llm_chain = LLMChain(llm=mistral_llm, prompt=prompt)
+#     # Create llm chain 
+#     llm_chain = LLMChain(llm=mistral_llm, prompt=prompt)
 
-    return llm_chain
+#     return llm_chain
 
 
 def rag(retriever, llm, question):
