@@ -179,4 +179,4 @@ def rag(retriever, llm, question):
 
 
 
-    return output_answer
+    return output_answer["answer"]
