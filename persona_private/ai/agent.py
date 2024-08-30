@@ -21,7 +21,7 @@ from transformers import (
 )
 from langchain.prompts import PromptTemplate
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-
+from langchain.chains import RetrievalQA
 from dotenv import load_dotenv
 load_dotenv()
 from langchain.llms import Ollama
@@ -137,6 +137,18 @@ def mistral7b_llm():
 #     return llm_chain
 
 
+def process_llm_response(llm_response):
+    print(llm_response['result'])
+    print('\n\nSources:')
+    for source in llm_response["source_documents"]:
+        print(source.metadata['source'])
+    
+    return {
+        "answer": llm_response['result'],
+        "source_documents": llm_response["source_documents"]
+
+    }
+
 def rag(retriever, llm, question):
     '''RAG Agent to answer questions
 
@@ -146,12 +158,25 @@ def rag(retriever, llm, question):
         question (str): question string
     
     '''
-    rag_chain = ( 
-    {"context": retriever, "question": RunnablePassthrough()}
-        | llm )
-    out = rag_chain.invoke(question)
+    # rag_chain = ( 
+    # {"context": retriever, "question": RunnablePassthrough()}
+    #     | llm )
+    # out = rag_chain.invoke(question)
 
-    ## separate output
-    output_answer = out["text"].split("[/INST]")[-1].strip()
+    # ## separate output
+    # output_answer = out["text"].split("[/INST]")[-1].strip()
+
+
+    # Question
+    qa_chain = RetrievalQA.from_chain_type(llm=llm,
+                                    chain_type="stuff",
+                                    retriever=retriever,
+                                    return_source_documents=True,
+                                    verbose=True)
+    
+    llm_response = qa_chain(question)
+    output_answer = process_llm_response(llm_response)
+
+
 
     return output_answer
