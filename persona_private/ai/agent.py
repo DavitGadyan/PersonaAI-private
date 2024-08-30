@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from langchain.llms import Ollama
 from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from huggingface_hub import login
 login(token=os.environ["SECRET_HF"])
 
