@@ -28,6 +28,10 @@ def load_docs(path):
     '''
     loader = DirectoryLoader(path, glob="./*.json", show_progress=True, loader_cls=TextLoader)
     documents = loader.load()
+
+    text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
+    documents = text_splitter.split_documents(documents)
+
     return documents
 
 def doc2chroma(docs, persist_directory):
@@ -57,7 +61,7 @@ def doc2chroma(docs, persist_directory):
 
     return retriever
 
-def save_docs2_chroma(path):
+def  save_docs2_chroma(path):
     docs = load_docs(path)
     retriever = doc2chroma(docs, persist_directory="docs_chromadb")
     return retriever

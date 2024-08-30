@@ -16,8 +16,4 @@ langchain-text-splitters==0.2.1
 transformers==4.43.3
 bitsandbytes==0.40.2
 accelerate==0.21.0
-fitz
-pptx
-pymupdf
-unstructured
-openai
+chromadb==0.4.24

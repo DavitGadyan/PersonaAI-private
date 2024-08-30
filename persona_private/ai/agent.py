@@ -25,7 +25,8 @@ from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 load_dotenv()
 
-
+from huggingface_hub import login
+login(token=os.environ["SECRET_HF"])
 
 def mistral7b_llm():
     '''Load LLM Mistral 7B
