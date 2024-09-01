@@ -21,17 +21,17 @@ load_dotenv()
 
 
 
-def load_docs(path):
+def load_docs(filepath):
     '''Read documents from json object and split them into chunks
 
     Args:
-        path (str): path to files on local machine
+        filepath (str): path to files on local machine
     '''
     # loader = DirectoryLoader(path, glob="./*.json", show_progress=True) #, loader_cls=TextLoader
     # documents = loader.load()
 
-    file_path='./file-2024.08.20.13.28.json'
-    data = json.loads(Path(file_path).read_text())
+    # file_path='./file-2024.08.20.13.28.json'
+    # data = json.loads(Path(file_path).read_text())
     loader = JSONLoader(
             file_path=file_path,
             jq_schema='.',
