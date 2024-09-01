@@ -3,7 +3,7 @@ from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain.embeddings import OpenAIEmbeddings
 import os
-
+import json
 #Ollama
 from langchain.llms import Ollama
 from langchain.callbacks.manager import CallbackManager
@@ -12,8 +12,9 @@ from langchain.embeddings import OllamaEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from langchain.document_loaders import DirectoryLoader
 from langchain.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.document_loaders import JSONLoader
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -26,7 +27,16 @@ def load_docs(path):
     Args:
         path (str): path to files on local machine
     '''
-    loader = DirectoryLoader(path, glob="./*.json", show_progress=True) #, loader_cls=TextLoader
+    # loader = DirectoryLoader(path, glob="./*.json", show_progress=True) #, loader_cls=TextLoader
+    # documents = loader.load()
+
+    file_path='./file-2024.08.20.13.28.json'
+    data = json.loads(Path(file_path).read_text())
+    loader = JSONLoader(
+            file_path=file_path,
+            jq_schema='.',
+            text_content=False)
+
     documents = loader.load()
 
     text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
