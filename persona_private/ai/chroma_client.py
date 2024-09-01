@@ -42,6 +42,7 @@ def load_docs(filepath):
     # file_path='./file-2024.08.20.13.28.json'
     data = json.loads(Path(filepath).read_text())
 
+    json_text = ""
     for country in data.keys():
         for feature in data[country].keys():
             json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
