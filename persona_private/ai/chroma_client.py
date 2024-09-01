@@ -26,7 +26,7 @@ def load_docs(path):
     Args:
         path (str): path to files on local machine
     '''
-    loader = DirectoryLoader(path, glob="./*.json", show_progress=True, loader_cls=TextLoader)
+    loader = DirectoryLoader(path, glob="./*.json", show_progress=True) #, loader_cls=TextLoader
     documents = loader.load()
 
     text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
