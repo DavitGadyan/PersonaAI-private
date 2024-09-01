@@ -175,6 +175,8 @@ def rag(retriever, llm, question):
                                     verbose=True)
     
     llm_response = qa_chain(question)
+    print("llm_response>>", llm_response)
+    print("llm_response>>", llm_response.keys())
     output_answer = process_llm_response(llm_response)
 
 
