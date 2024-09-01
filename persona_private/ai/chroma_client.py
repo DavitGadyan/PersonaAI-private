@@ -19,12 +19,13 @@ from dotenv import load_dotenv
 from langchain.schema import Document
 
 class StringLoader:
-    def __init__(self, text: str):
+    def __init__(self, text: str, metadata: str):
         self.text = text
+        self.metadata = metadata
 
     def load(self):
         # Create a Document from the string
-        return [Document(page_content=self.text)]
+        return [Document(page_content=self.text, metadata=self.metadata)]
     
 load_dotenv()
 
@@ -53,7 +54,7 @@ def load_docs(filepath):
     #         jq_schema='.',
     #         text_content=False)
 
-    loader = StringLoader(json_text)
+    loader = StringLoader(json_text, metadata={"source": filepath.split('/')[-1]})
     documents = loader.load()
 
     text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
