@@ -16,7 +16,16 @@ from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain_community.document_loaders import JSONLoader
 from pathlib import Path
 from dotenv import load_dotenv
+from langchain.schema import Document
 
+class StringLoader:
+    def __init__(self, text: str):
+        self.text = text
+
+    def load(self):
+        # Create a Document from the string
+        return [Document(page_content=self.text)]
+    
 load_dotenv()
 
 
@@ -31,12 +40,19 @@ def load_docs(filepath):
     # documents = loader.load()
 
     # file_path='./file-2024.08.20.13.28.json'
-    # data = json.loads(Path(file_path).read_text())
-    loader = JSONLoader(
-            file_path=filepath,
-            jq_schema='.',
-            text_content=False)
+    data = json.loads(Path(filepath).read_text())
 
+    for country in data.keys():
+        for feature in data[country].keys():
+            json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
+        json_text += "\n\n"
+
+    # loader = JSONLoader(
+    #         file_path=filepath,
+    #         jq_schema='.',
+    #         text_content=False)
+
+    loader = StringLoader(json_text)
     documents = loader.load()
 
     text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
