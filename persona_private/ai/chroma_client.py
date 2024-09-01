@@ -57,7 +57,7 @@ def load_docs(filepath):
     loader = StringLoader(json_text, metadata={"source": filepath.split('/')[-1]})
     documents = loader.load()
 
-    text_splitter = CharacterTextSplitter (chunk_size=128000, chunk_overlap=50)
+    text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
     documents = text_splitter.split_documents(documents)
 
     return documents
