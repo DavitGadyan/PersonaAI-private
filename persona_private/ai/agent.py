@@ -140,13 +140,13 @@ def mistral7b_llm():
 def process_llm_response(llm_response):
     print(llm_response['result'])
     print('\n\nSources:')
-    for source in llm_response["source_documents"]:
-        print("sourceXXX>>>", source)
-        print(source.metadata['source'])
+    # for source in llm_response["source_documents"]:
+    #     print("sourceXXX>>>", source)
+    #     print(source.metadata['source'])
     
     return {
         "answer": llm_response['result'],
-        "source_documents": llm_response["source_documents"]
+        # "source_documents": llm_response["source_documents"]
 
     }
 
