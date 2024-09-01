@@ -33,7 +33,7 @@ def load_docs(filepath):
     # file_path='./file-2024.08.20.13.28.json'
     # data = json.loads(Path(file_path).read_text())
     loader = JSONLoader(
-            file_path=file_path,
+            file_path=filepath,
             jq_schema='.',
             text_content=False)
 
