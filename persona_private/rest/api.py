@@ -48,7 +48,7 @@ def embeed(json_file: JsonFile):
     filename = json_file.model_dump()['filename']
     print('json_file>>', json_file)
 
-    docs = load_json(json_file=json_file, filename=filename)
+    docs = load_json(json_obj=json_file, filename=filename)
 
     retriever = doc2chroma(docs=docs, persist_directory="docs_chromadb")
     print("retriever>>", retriever)
