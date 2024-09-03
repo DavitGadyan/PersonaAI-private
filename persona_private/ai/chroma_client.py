@@ -107,7 +107,7 @@ def doc2chroma(docs, persist_directory):
                                  # embedding=embeddings_open,
                                  embedding=embeddings_model,   
                                  persist_directory=persist_directory)
-
+    print('n_documents>>', len(vectorstore.get()['documents']))
     vectorstore.persist()
     retriever = vectorstore.as_retriever()
 

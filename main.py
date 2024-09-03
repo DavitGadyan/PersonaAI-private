@@ -34,3 +34,4 @@ llm = mistral7b_llm()
 answer = rag(retriever=retriever, llm=llm, question="What is documemt about?")
 
 print("answer>>>", answer)
+
