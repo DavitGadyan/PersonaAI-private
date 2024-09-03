@@ -45,11 +45,11 @@ def process(query_params: QueryParams):
 def embeed(json_file: JsonFile):
     print("json_file>>", json_file)
     # try:
-    json_file = json_file.model_dump()['file']
+    json_obj = json_file.model_dump()['file']
     filename = json_file.model_dump()['filename']
     print('json_file>>', json_file)
 
-    docs = load_json(json_obj=json_file, filename=filename)
+    docs = load_json(json_obj=json_obj, filename=filename)
 
     retriever = doc2chroma(docs=docs, persist_directory="docs_chromadb")
     print("retriever>>", retriever)
