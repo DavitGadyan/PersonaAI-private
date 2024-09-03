@@ -43,6 +43,7 @@ def process(query_params: QueryParams):
 
 @app.post('/embeed')
 def embeed(json_file: JsonFile):
+    print("json_file>>", json_file)
     # try:
     json_file = json_file.model_dump()['file']
     filename = json_file.model_dump()['filename']
