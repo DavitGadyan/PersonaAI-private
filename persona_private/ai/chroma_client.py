@@ -30,7 +30,6 @@ class StringLoader:
 load_dotenv()
 
 
-
 def load_docs(filepath):
     '''Read documents from json object and split them into chunks
 
@@ -61,6 +60,31 @@ def load_docs(filepath):
     documents = text_splitter.split_documents(documents)
 
     return documents
+
+def load_json(json_obj, filename):
+    '''Read documents from json object and split them into chunks
+
+    Args:
+        json_obj (dict): json object
+        filename (str): name of file
+    '''
+
+    data = json_obj
+    json_text = ""
+    for country in data.keys():
+        for feature in data[country].keys():
+            json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
+        json_text += "\n\n"
+
+    loader = StringLoader(json_text, metadata={"source": filename})
+    documents = loader.load()
+
+    text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
+    documents = text_splitter.split_documents(documents)
+
+    return documents
+
+
 
 def doc2chroma(docs, persist_directory):
     '''Save embeddings to Chroma

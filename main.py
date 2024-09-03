@@ -18,7 +18,7 @@ dotenv.load_dotenv()
 #     app.run()
 
 
-from persona_private.ai.chroma_client import load_docs, doc2chroma, save_docs2_chroma, get_retriever
+from persona_private.ai.chroma_client import load_docs, doc2chroma,  save_docs2_chroma, get_retriever
 from persona_private.ai.agent import rag, mistral7b_llm
 
 docs = load_docs(filepath="persona_private/ai/files/file-2024.08.20.13.28.json")

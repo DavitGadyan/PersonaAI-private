@@ -8,51 +8,55 @@ import uvicorn
 
 from persona_private.ai.chroma_client import get_retriever
 from persona_private.ai.agent import rag, mistral7b_llm
-from persona_private.ai.chroma_client import save_docs2_chroma
+from persona_private.ai.chroma_client import load_docs, load_json, doc2chroma, save_docs2_chroma, get_retriever
+
 import dotenv
 
 dotenv.load_dotenv()
 
-retriever = get_retriever(persist_directory="docs_chromadb")
+
 llm = mistral7b_llm()
 
 app = FastAPI()
 
-class DocParams(BaseModel):
+class QueryParams(BaseModel):
     question: str
+
+class JsonFile(BaseModel):
+    file: dict
+    filename: str
 
 @app.get('/')
 async def home():
     return {"message": "RAG AI Private Persona FAST API is running!!"}
 
 @app.post('/analyze')
-def process(doc_params: DocParams):
+def process(query_params: QueryParams):
+    retriever = get_retriever(persist_directory="docs_chromadb")
     try:
-        question = doc_params.model_dump()['question']
+        question = query_params.model_dump()['question']
         answer = rag(retriever, llm, question=question)
         return {"answer": answer}
     except Exception as e:
         print('Error>>>', e)
         return 500, {"message": f"Following error occured>> {e}"}
 
-    return {"message": f"{doc_params.dict()} has been processed!!!"}
-
-
 @app.post('/embeed')
-def process(docs_path: str):
+def embeed(json_file: JsonFile):
     # try:
-    print('docs_path>>', docs_path)
+    json_file = json_file.model_dump()['file']
+    filename = json_file.model_dump()['filename']
+    print('json_file>>', json_file)
 
-    try:
-        retriever = save_docs2_chroma(docs_path)
-    except:
-        retriever = save_docs2_chroma(docs_path)
-        
+    docs = load_json(json_file=json_file, filename=filename)
+
+    retriever = doc2chroma(docs=docs, persist_directory="docs_chromadb")
+    print("retriever>>", retriever)
+    return {"message": f"{filename} was save to Chroma!!!"}
     # except Exception as e:
     #     print('Error>>>', e)
     #     return 500, {"message": f"Following error occured>> {e}"}
     
-    return {"message": f"{doc_obj.keys()} has been saved to Pinecone!!!"}
 
 
 if __name__ == "__main__":
