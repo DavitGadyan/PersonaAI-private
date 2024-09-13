@@ -70,19 +70,21 @@ def load_json(json_obj, filename):
     '''
 
     data = json_obj
+    out_l = []
     json_text = ""
     for country in data.keys():
         for feature in data[country].keys():
             json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
         json_text += "\n\n"
 
-    loader = StringLoader(json_text, metadata={"source": filename})
-    documents = loader.load()
+        loader = StringLoader(json_text, metadata={"source": filename})
+        documents = loader.load()
 
-    text_splitter = CharacterTextSplitter (chunk_size=102400, chunk_overlap=50)
-    documents = text_splitter.split_documents(documents)
+        text_splitter = CharacterTextSplitter (chunk_size=10240, chunk_overlap=50)
+        documents = text_splitter.split_documents(documents)
+        out_l.append(documents)
 
-    return documents
+    return [item for sublist in out_l for item in sublist]
 
 
 
