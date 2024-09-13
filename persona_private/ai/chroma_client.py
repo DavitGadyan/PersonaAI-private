@@ -128,7 +128,7 @@ def get_retriever(persist_directory="docs_chromadb"):
     vectorstore = Chroma(persist_directory=persist_directory,
                         embedding_function=embeddings_model
                         )
-    
+    vectorstore.persist()
     retriever = vectorstore.as_retriever()
 
     return retriever

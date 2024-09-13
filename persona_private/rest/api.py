@@ -1,5 +1,7 @@
 '''FAST API to serve REST framework for analyzing real estate listings
 '''
+import os
+import sys
 from typing import Optional, Literal
 from pydantic import BaseModel
 
@@ -26,12 +28,17 @@ class JsonFile(BaseModel):
     file: dict
     filename: str
 
+def trigger_reload():
+    """Function to trigger the reload process by restarting the server."""
+    os.execv(__file__, ['python'] + sys.argv)
+
 @app.get('/')
 async def home():
     return {"message": "RAG AI Private Persona FAST API is running!!"}
 
 @app.post('/analyze')
 def process(query_params: QueryParams):
+    trigger_reload()
     retriever = get_retriever(persist_directory="docs_chromadb")
     try:
         question = query_params.model_dump()['question']
