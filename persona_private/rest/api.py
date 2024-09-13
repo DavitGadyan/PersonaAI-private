@@ -30,6 +30,8 @@ class JsonFile(BaseModel):
 
 def trigger_reload():
     """Function to trigger the reload process by restarting the server."""
+    print("sys.argv>>", sys.argv)
+    print(__file__)
     os.execv(__file__, ['python'] + sys.argv)
 
 @app.get('/')
