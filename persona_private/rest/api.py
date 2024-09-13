@@ -28,11 +28,7 @@ class JsonFile(BaseModel):
     file: dict
     filename: str
 
-def trigger_reload():
-    """Function to trigger the reload process by restarting the server."""
-    print("sys.argv>>", sys.argv)
-    print(__file__)
-    os.execv(__file__, ['python'] + sys.argv)
+
 
 @app.get('/')
 async def home():
@@ -40,7 +36,6 @@ async def home():
 
 @app.post('/analyze')
 def process(query_params: QueryParams):
-    trigger_reload()
     retriever = get_retriever(persist_directory="docs_chromadb")
     try:
         question = query_params.model_dump()['question']
