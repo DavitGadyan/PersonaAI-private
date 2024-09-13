@@ -178,6 +178,8 @@ def rag(retriever, llm, question):
     llm_response = qa_chain(question)
     print("llm_response>>", llm_response)
     print("llm_response>>", llm_response.keys())
+    print("source docs len >>", len(llm_response["source_documents"]))
+    print("source docs >>", llm_response["source_documents"])
     output_answer = process_llm_response(llm_response)
 
 
