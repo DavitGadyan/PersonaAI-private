@@ -46,7 +46,7 @@ def load_docs(filepath):
     for country in data.keys():
         for feature in data[country].keys():
             json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
-        json_text += "\n\n"
+    json_text += "\n\n"
 
     # loader = JSONLoader(
     #         file_path=filepath,
@@ -56,7 +56,7 @@ def load_docs(filepath):
     loader = StringLoader(json_text, metadata={"source": filepath.split('/')[-1]})
     documents = loader.load()
 
-    text_splitter = CharacterTextSplitter (chunk_size=1024, chunk_overlap=50)
+    text_splitter = CharacterTextSplitter (chunk_size=102400, chunk_overlap=50)
     documents = text_splitter.split_documents(documents)
 
     return documents
@@ -77,10 +77,10 @@ def load_json(json_obj, filename):
             json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
         json_text += "<END-END>"
 
-        loader = StringLoader(json_text, metadata={"source": filename})
-        documents = loader.load()
+    loader = StringLoader(json_text, metadata={"source": filename})
+    documents = loader.load()
 
-    text_splitter = CharacterTextSplitter(chunk_size=1024000, chunk_overlap=50, separator="<END-END>")
+    text_splitter = CharacterTextSplitter(chunk_size=102400, chunk_overlap=50, separator="<END-END>")
     documents = text_splitter.split_documents(documents)
 
     return documents
