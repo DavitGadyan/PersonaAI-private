@@ -71,8 +71,9 @@ def load_json(json_obj, filename):
 
     data = json_obj
     out_l = []
-    json_text = ""
+    
     for country in data.keys():
+        json_text = ""
         for feature in data[country].keys():
             json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
         json_text += "\n\n"
