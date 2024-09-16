@@ -4,6 +4,7 @@ from langchain.chains import RetrievalQA
 from langchain.embeddings import OpenAIEmbeddings
 import os
 import json
+import time
 #Ollama
 from langchain.llms import Ollama
 from langchain.callbacks.manager import CallbackManager
@@ -77,6 +78,7 @@ def load_json(json_obj, filename):
             json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
         json_text += "<END-END>"
     print(len(json_text.split("<END-END>")))
+    time.sleep(10)
     loader = StringLoader(json_text, metadata={"source": filename})
     documents = loader.load()
 
