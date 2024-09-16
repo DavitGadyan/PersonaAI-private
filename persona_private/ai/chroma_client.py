@@ -76,7 +76,7 @@ def load_json(json_obj, filename):
         for feature in data[country].keys():
             json_text += f'\n For Country: {country} feature {feature} values are {str(data[country][feature])}'
         json_text += "<END-END>"
-
+    print(len(json_text.split("<END-END>")))
     loader = StringLoader(json_text, metadata={"source": filename})
     documents = loader.load()
 
