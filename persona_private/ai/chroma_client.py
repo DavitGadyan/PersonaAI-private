@@ -83,7 +83,7 @@ def load_json(json_obj, filename):
     loader = StringLoader(json_text, metadata={"source": filename})
     documents = loader.load()
 
-    text_splitter = CharacterTextSplitter(chunk_size=2052, chunk_overlap=50, separator="<END-END>")
+    text_splitter = CharacterTextSplitter(chunk_size=2052, chunk_overlap=0, separator="<END-END>")
     documents = text_splitter.split_documents(documents)
 
     return documents
