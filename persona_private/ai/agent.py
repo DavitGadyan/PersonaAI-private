@@ -115,9 +115,8 @@ def mistral7b_llm0():
 
     prompt_template = """
     ### [INST] 
-    Instruction: Answer the question based on your knowledge. Here is context to help:
+    Instruction: Answer the question based on your knowledge.
 
-    {context}
 
     ### QUESTION:
     {question} 
@@ -129,7 +128,8 @@ def mistral7b_llm0():
 
     # Create prompt from prompt template 
     prompt = PromptTemplate(
-        input_variables=["context", "question"],
+        # input_variables=["context", "question"],
+        input_variables=[ "question"],
         template=prompt_template,
     )
 
