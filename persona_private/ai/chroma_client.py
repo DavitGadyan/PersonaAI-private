@@ -123,7 +123,6 @@ def doc2chroma(docs, persist_directory):
         persist_directory (str): directory to store files as vectors
 
     '''
-
     ## set mistral embeddings
     # Ollama embeddings
     embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',)
@@ -132,7 +131,8 @@ def doc2chroma(docs, persist_directory):
     vectorstore = Chroma.from_documents(documents=docs,
                                  # Chose the embedding you want to use
                                  # embedding=embeddings_open,
-                                 embedding=embeddings_model,   
+                                 embedding=embeddings_model,
+                                collection_metadata={"hnsw:space": "cosine"},
                                  persist_directory=persist_directory)
     print('n_documents>>', len(vectorstore.get()['documents']))
     vectorstore.persist()
