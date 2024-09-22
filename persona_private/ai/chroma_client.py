@@ -220,7 +220,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     model = AutoModelForCausalLM.from_pretrained(model_name)
 
     # Create a text generation pipeline
-    text_gen_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, max_new_tokens=10000)
+    text_gen_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, max_new_tokens=10000, device=0)
 
     # Use HuggingFacePipeline as an LLM
     model = HuggingFacePipeline(pipeline=text_gen_pipeline)
