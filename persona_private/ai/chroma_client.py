@@ -13,6 +13,7 @@ from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.embeddings import OllamaEmbeddings
 from langchain.prompts import PromptTemplate
+from langchain.llms import Ollama
 from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
 from langchain.document_loaders import DirectoryLoader, TextLoader
@@ -20,6 +21,8 @@ from langchain_community.document_loaders import JSONLoader
 from pathlib import Path
 from dotenv import load_dotenv
 from langchain.schema import Document
+from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 class StringLoader:
     def __init__(self, text: str, metadata: str):
@@ -194,7 +197,12 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
         question (str): question of RAG
         persist_directory (str): name of database
     '''
-    model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
+    
+    model = Ollama(  model="mistral",
+                    #model='Llama2',
+                    callback_manager = CallbackManager([StreamingStdOutCallbackHandler()]))
+    
+
     vectorstore = Chroma(persist_directory=persist_directory,
                         embedding_function=model
                         )
