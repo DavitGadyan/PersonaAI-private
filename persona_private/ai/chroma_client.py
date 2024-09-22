@@ -215,7 +215,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     '''
     embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
 
-    model = Ollama(model="mistral", base_url='http://0.0.0.0:11434',)
+    model = Ollama(model="llama3", base_url='http://0.0.0.0:11434',)
 
     vectorstore = Chroma(persist_directory=persist_directory,
                         embedding_function=embeddings_model
