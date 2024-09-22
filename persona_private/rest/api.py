@@ -2,6 +2,7 @@
 '''
 import os
 import sys
+import time
 from typing import Optional, Literal
 from pydantic import BaseModel
 
@@ -39,6 +40,10 @@ def process(query_params: QueryParams):
     # try:
     question = query_params.model_dump()['question']
     retriever = get_retriever3(question=question, persist_directory="docs_chromadb")
+    docs = retriever.get_relevant_documents(question)
+    print(len(docs))
+    print(docs)
+    time.sleep(10)
     answer = rag(retriever, llm, question=question)
     return {"answer": answer}
     # except Exception as e:
