@@ -156,6 +156,6 @@ def get_retriever(persist_directory="docs_chromadb"):
                         embedding_function=embeddings_model
                         )
     
-    retriever = vectorstore.as_retriever(search_kwargs={'k': 1})
+    retriever = vectorstore.as_retriever(search_kwargs={'k': 10})
 
     return retriever
