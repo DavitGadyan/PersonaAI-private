@@ -28,6 +28,8 @@ from langchain.llms import Ollama
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from huggingface_hub import login
+from langchain.chains import RetrievalQAWithSourcesChain
+
 login(token=os.environ["SECRET_HF"])
 
 def mistral7b_llm():
@@ -175,8 +177,11 @@ def rag(retriever, llm, question):
     #                                 return_source_documents=True,
     #                                 verbose=True)
     
-    # llm_response = qa_chain(question)
-    llm_response = retriever.invoke(question)
+    qa_chain = RetrievalQAWithSourcesChain.from_chain_type(llm, 
+                                                    chain_type="stuff", 
+                                                    retriever=retriever)
+    
+    llm_response = qa_chain({"question":question})
     print("llm_response>>", llm_response)
     print("llm_response>>", llm_response.keys())
     print("source docs len >>", len(llm_response["source_documents"]))
