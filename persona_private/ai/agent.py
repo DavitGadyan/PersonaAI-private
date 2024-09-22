@@ -159,23 +159,23 @@ def rag(retriever, llm, question):
         question (str): question string
     
     '''
-    rag_chain = ( 
-    {"context": retriever, "question": RunnablePassthrough()}
-        | llm )
-    llm_response = rag_chain.invoke(question)
+    # rag_chain = ( 
+    # {"context": retriever, "question": RunnablePassthrough()}
+    #     | llm )
+    # out = rag_chain.invoke(question)
 
     # ## separate output
     # output_answer = out["text"].split("[/INST]")[-1].strip()
 
 
     # Question
-    # qa_chain = RetrievalQA.from_chain_type(llm=llm,
-    #                                 chain_type="stuff",
-    #                                 retriever=retriever,
-    #                                 return_source_documents=True,
-    #                                 verbose=True)
+    qa_chain = RetrievalQA.from_chain_type(llm=llm,
+                                    chain_type="stuff",
+                                    retriever=retriever,
+                                    return_source_documents=True,
+                                    verbose=True)
     
-    # llm_response = qa_chain(question)
+    llm_response = qa_chain(question)
     print("llm_response>>", llm_response)
     print("llm_response>>", llm_response.keys())
     print("source docs len >>", len(llm_response["source_documents"]))
