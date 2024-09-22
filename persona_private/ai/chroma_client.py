@@ -215,15 +215,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     '''
     embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
     # Load the tokenizer and model from Hugging Face
-    model_name = "mistralai/Mistral-7B-Instruct-v0.1"  # Replace with the correct model
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(model_name)
-
-    # Create a text generation pipeline
-    text_gen_pipeline = pipeline("text-generation", model=model, tokenizer=tokenizer, max_new_tokens=100, device=0)
-
-    # Use HuggingFacePipeline as an LLM
-    model = HuggingFacePipeline(pipeline=text_gen_pipeline)
+    model = Ollama(model="mistral", base_url='http://0.0.0.0:11434',)
 
 
 
