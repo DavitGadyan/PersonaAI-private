@@ -244,6 +244,8 @@ def get_retriever3(question, persist_directory="docs_chromadb"):
     vectorstore = Chroma(persist_directory=persist_directory,
                         embedding_function=embeddings_model
                         )
+    print(question.lower())
+    print(country_regex)
     country = re.findall(country_regex, question.lower())[0]
     print("country>>", country)
     retriever = vectorstore.as_retriever(search_kwargs={'k': 10, 'filter': {'CountryName' : country}})
