@@ -141,7 +141,9 @@ def mistral7b_llm():
 
 def process_llm_response(llm_response):
     print(llm_response)
-    print(llm_response['result'])
+    import time
+    time.sleep(10)
+    # print(llm_response['result'])
     print('\n\nSources:')
     # for source in llm_response["source_documents"]:
     #     print("sourceXXX>>>", source)
