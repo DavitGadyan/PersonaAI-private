@@ -224,5 +224,5 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
         )
     docs = retriever.get_relevant_documents(question)
     print("docs>>", docs)
-    time.sleep()
+    time.sleep(10)
     return retriever
