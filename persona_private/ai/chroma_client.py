@@ -214,11 +214,8 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
         persist_directory (str): name of database
     '''
     embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
-    # Load the tokenizer and model from Hugging Face
+
     model = Ollama(model="mistral", base_url='http://0.0.0.0:11434',)
-
-
-
 
     vectorstore = Chroma(persist_directory=persist_directory,
                         embedding_function=embeddings_model
@@ -228,7 +225,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     retriever = SelfQueryRetriever.from_llm(
             model, vectorstore, document_content_description, metadata_field_info, verbose=True
         )
-    docs = retriever.get_relevant_documents(question)
-    print("docs>>", docs)
+    # docs = retriever.get_relevant_documents(question)
+    # print("docs>>", docs)
     time.sleep(10)
     return retriever
