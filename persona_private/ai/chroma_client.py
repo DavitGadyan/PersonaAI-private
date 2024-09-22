@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 from langchain.schema import Document
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from persona_private.ai.agent import mistral7b_llm
+from persona_private.ai.agent import mistral7b_llm, mistral7b_llm0
 
 class StringLoader:
     def __init__(self, text: str, metadata: str):
@@ -212,7 +212,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
         persist_directory (str): name of database
     '''
     embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
-    model = mistral7b_llm()
+    model = mistral7b_llm0()
 
     vectorstore = Chroma(persist_directory=persist_directory,
                         embedding_function=embeddings_model
