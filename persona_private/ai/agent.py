@@ -181,7 +181,7 @@ def rag(retriever, llm, question):
                                                     chain_type="stuff", 
                                                     retriever=retriever)
     
-    llm_response = qa_chain({"question":question})
+    llm_response = qa_chain(question)
     print("llm_response>>", llm_response)
     print("llm_response>>", llm_response.keys())
     print("source docs len >>", len(llm_response["source_documents"]))
