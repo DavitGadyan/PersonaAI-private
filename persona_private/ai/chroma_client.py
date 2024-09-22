@@ -88,6 +88,31 @@ def load_json(json_obj, filename):
 
     return documents
 
+def load_json2(json_obj, filename):
+    '''Read documents from json object and split them into chunks
+
+    Args:
+        json_obj (dict): json object
+        filename (str): name of file
+    '''
+
+    data = json_obj
+    file_path='./data.json'
+
+    for k, v in data.items():
+        data[k]["CountryName"] = k
+
+    with open(file_path, 'w') as f:
+        json.dump(data, f)
+
+    loader = JSONLoader(
+            file_path=file_path,
+            jq_schema='.[]',
+            text_content=False)
+
+    documents = loader.load()
+
+    return documents
 
 
 def doc2chroma(docs, persist_directory):
@@ -103,8 +128,6 @@ def doc2chroma(docs, persist_directory):
     # Ollama embeddings
     embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',)
     
-
-
     ## set chroma vectorstore
     vectorstore = Chroma.from_documents(documents=docs,
                                  # Chose the embedding you want to use

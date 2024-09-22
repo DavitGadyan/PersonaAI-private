@@ -10,7 +10,7 @@ import uvicorn
 
 from persona_private.ai.chroma_client import get_retriever
 from persona_private.ai.agent import rag, mistral7b_llm
-from persona_private.ai.chroma_client import load_docs, load_json, doc2chroma, save_docs2_chroma, get_retriever
+from persona_private.ai.chroma_client import load_docs, load_json, doc2chroma, save_docs2_chroma, get_retriever, load_json2
 
 import dotenv
 
@@ -53,7 +53,7 @@ def embeed(json_file: JsonFile):
     filename = json_file.model_dump()['filename']
     # print('json_file>>', json_file)
 
-    docs = load_json(json_obj=json_obj, filename=filename)
+    docs = load_json2(json_obj=json_obj, filename=filename)
 
     retriever = doc2chroma(docs=docs, persist_directory="docs_chromadb")
     print("retriever>>", retriever)
