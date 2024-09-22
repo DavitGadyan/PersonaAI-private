@@ -33,7 +33,20 @@ class StringLoader:
     def load(self):
         # Create a Document from the string
         return [Document(page_content=self.text, metadata=self.metadata)]
+
+class CustomQueryConstructor:
+    """Custom query constructor to ensure proper filter and query structure."""
     
+    def __call__(self, query):
+        # Correctly return the query and filter object
+        return {
+            "query": query,
+            "filter": {
+                "CountryName": "Spain"  # This could be dynamic based on user input
+            }
+        }
+
+
 load_dotenv()
 
 metadata_field_info = [
@@ -209,7 +222,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     retriever = SelfQueryRetriever.from_llm(
             model, vectorstore, document_content_description, metadata_field_info, verbose=True
         )
-    docs = retriever.invoke(question)
+    docs = retriever.get_relevant_documents(question)
     print("docs>>", docs)
     time.sleep()
     return retriever
