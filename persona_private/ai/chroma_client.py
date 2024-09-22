@@ -5,6 +5,7 @@ from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.embeddings import OpenAIEmbeddings
 import os
+import re
 import json
 import time
 #Ollama
@@ -27,6 +28,8 @@ from persona_private.ai.agent import mistral7b_llm
 from langchain.llms import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
+
+country_regex =  r'zimbabwe|falkland islands|antarctica|colombia|iceland|laos|timor-leste|mexico|angola|nepal|benin|algeria|spain|kosovo|united states|heard island and mcdonald islands|bolivia|montenegro|uganda|niger|cyprus|canada|cayman islands|china|martinique|liechtenstein|jamaica|bouvet island|morocco|cambodia|bahrain|grenada|uzbekistan|malaysia|sudan|cape verde|south sudan|guatemala|chile|gibraltar|pitcairn islands|tuvalu|republic of the congo|honduras|greece|trinidad and tobago|egypt|somalia|venezuela|barbados|burkina faso|belarus|zambia|saint pierre and miquelon|south korea|moldova|france|senegal|iraq|hong kong|jersey|liberia|fiji|western sahara|chad|netherlands|oman|luxembourg|turkey|taiwan|jordan|philippines|northern mariana islands|united kingdom|united arab emirates|togo|saint kitts and nevis|uruguay|mongolia|finland|portugal|anguilla|turks and caicos islands|mauritius|belgium|denmark|poland|norfolk island|ecuador|tanzania|vietnam|guam|ghana|christmas island|ukraine|niue|argentina|montserrat|gabon|qatar|djibouti|libya|norway|brunei|sweden|bhutan|el salvador|azerbaijan|myanmar|lesotho|kuwait|saint barthélemy|kiribati|south africa|lithuania|switzerland|eritrea|equatorial guinea|new zealand|iran|turkmenistan|saint helena, ascension and tristan da cunha|ethiopia|dr congo|bulgaria|north macedonia|tajikistan|kenya|malta|peru|nicaragua|dominica|south georgia|united states minor outlying islands|san marino|new caledonia|afghanistan|mauritania|saint vincent and the grenadines|rwanda|micronesia|british indian ocean territory|mayotte|guinea|latvia|french polynesia|india|solomon islands|antigua and barbuda|austria|comoros|réunion|japan|vatican city|syria|slovakia|belize|kyrgyzstan|indonesia|central african republic|pakistan|singapore|curaçao|american samoa|botswana|caribbean netherlands|mozambique|kazakhstan|germany|bangladesh|samoa|italy|mali|isle of man|gambia|romania|british virgin islands|united states virgin islands|faroe islands|svalbard and jan mayen|namibia|palau|croatia|palestine|french southern and antarctic lands|são tomé and príncipe|macau|guadeloupe|eswatini|burundi|papua new guinea|dominican republic|french guiana|nauru|armenia|puerto rico|tunisia|sierra leone|marshall islands|wallis and futuna|serbia|monaco|guinea-bissau|åland islands|saudi arabia|north korea|tonga|cook islands|haiti|russia|greenland|bermuda|guyana|ivory coast|panama|sint maarten|vanuatu|brazil|australia|cuba|costa rica|bosnia and herzegovina|albania|estonia|bahamas|saint martin|lebanon|guernsey|malawi|seychelles|georgia|tokelau|madagascar|slovenia|andorra|maldives|sri lanka|thailand|cameroon|czechia|cocos (keeling) islands|saint lucia|nigeria|aruba|suriname|yemen|hungary|ireland|paraguay'
 class StringLoader:
     def __init__(self, text: str, metadata: str):
         self.text = text
@@ -54,7 +57,7 @@ load_dotenv()
 metadata_field_info = [
     AttributeInfo(
         name="CountryName",
-        description="The country of the record",
+        description="The country",
         type="string",
     ),
     # AttributeInfo(
@@ -130,7 +133,7 @@ def load_json(json_obj, filename):
     return documents
 
 def metadata_func(record: dict, metadata: dict) -> dict:
-    metadata["Country"] = record.get("CountryName")
+    metadata["CountryName"] = record.get("CountryName")
     return metadata
 
 def load_json2(json_obj, filename):
@@ -145,7 +148,7 @@ def load_json2(json_obj, filename):
     file_path='./data.json'
 
     for k, v in data.items():
-        data[k]["CountryName"] = k
+        data[k]["CountryName"] = k.lower()
 
     with open(file_path, 'w') as f:
         json.dump(data, f)
@@ -228,4 +231,20 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     # docs = retriever.get_relevant_documents(question)
     # print("docs>>", docs)
     time.sleep(10)
+    return retriever
+
+def get_retriever3(question, persist_directory="docs_chromadb"):
+    '''Get retriever object from Chroma
+
+    Args:
+        question (str): question of RAG
+        persist_directory (str): name of database
+    '''
+    embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
+    vectorstore = Chroma(persist_directory=persist_directory,
+                        embedding_function=embeddings_model
+                        )
+    country = re.findall(country_regex, question.lower())[0]
+    retriever = vectorstore.as_retriever(search_kwargs={'k': 10, 'filter': {'CountryName' : country}})
+
     return retriever

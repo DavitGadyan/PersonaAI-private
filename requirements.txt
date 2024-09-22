@@ -18,3 +18,4 @@ bitsandbytes==0.40.2
 accelerate==0.21.0
 chromadb==0.4.24
 lark
+country-named-entity-recognition
