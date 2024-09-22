@@ -209,5 +209,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     retriever = SelfQueryRetriever.from_llm(
             model, vectorstore, document_content_description, metadata_field_info, verbose=True
         )
-    
+    docs = retriever.invoke(question)
+    print("docs>>", docs)
+    time.sleep(10)
     return retriever
