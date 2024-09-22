@@ -220,7 +220,7 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
     vectorstore = Chroma(persist_directory=persist_directory,
                         embedding_function=embeddings_model
                         )
-    document_content_description = "Indicators related to a country"
+    document_content_description = "Indicators related to a country."
 
     retriever = SelfQueryRetriever.from_llm(
             model, vectorstore, document_content_description, metadata_field_info, verbose=True
