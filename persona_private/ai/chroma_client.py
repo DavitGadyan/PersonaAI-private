@@ -1,6 +1,8 @@
 # Import libraries
 from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
+from langchain.retrievers.self_query.base import SelfQueryRetriever
+from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.embeddings import OpenAIEmbeddings
 import os
 import json
@@ -30,6 +32,26 @@ class StringLoader:
     
 load_dotenv()
 
+metadata_field_info = [
+    AttributeInfo(
+        name="country",
+        description="The country of the record",
+        type="string",
+    ),
+    # AttributeInfo(
+    #     name="year",
+    #     description="The year the movie was released",
+    #     type="integer",
+    # ),
+    # AttributeInfo(
+    #     name="director",
+    #     description="The name of the movie director",
+    #     type="string",
+    # ),
+    # AttributeInfo(
+    #     name="rating", description="A 1-10 rating for the movie", type="float"
+    # ),
+]
 
 def load_docs(filepath):
     '''Read documents from json object and split them into chunks
@@ -161,6 +183,24 @@ def get_retriever(persist_directory="docs_chromadb"):
                         embedding_function=embeddings_model
                         )
     
-    retriever = vectorstore.as_retriever(search_kwargs={'k': 20})
+    retriever = vectorstore.as_retriever(search_kwargs={'k': 10})
+
+    return retriever
+
+def get_retriever2(question, persist_directory="docs_chromadb"):
+    '''Get retriever object from Chroma
+
+    Args:
+        question (str): question of RAG
+        persist_directory (str): name of database
+    '''
+    model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
+    vectorstore = Chroma(persist_directory=persist_directory,
+                        embedding_function=model
+                        )
+    
+    retriever = SelfQueryRetriever.from_llm(
+            model, vectorstore, question, metadata_field_info, verbose=True
+        )
 
     return retriever

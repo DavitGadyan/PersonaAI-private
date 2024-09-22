@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 import uvicorn
 
-from persona_private.ai.chroma_client import get_retriever
+from persona_private.ai.chroma_client import get_retriever, get_retriever2
 from persona_private.ai.agent import rag, mistral7b_llm
 from persona_private.ai.chroma_client import load_docs, load_json, doc2chroma, save_docs2_chroma, get_retriever, load_json2
 
@@ -36,9 +36,9 @@ async def home():
 
 @app.post('/analyze')
 def process(query_params: QueryParams):
-    retriever = get_retriever(persist_directory="docs_chromadb")
     try:
         question = query_params.model_dump()['question']
+        retriever = get_retriever2(question=question, persist_directory="docs_chromadb")
         answer = rag(retriever, llm, question=question)
         return {"answer": answer}
     except Exception as e:
