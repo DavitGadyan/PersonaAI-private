@@ -36,14 +36,14 @@ async def home():
 
 @app.post('/analyze')
 def process(query_params: QueryParams):
-    try:
-        question = query_params.model_dump()['question']
-        retriever = get_retriever2(question=question, persist_directory="docs_chromadb")
-        answer = rag(retriever, llm, question=question)
-        return {"answer": answer}
-    except Exception as e:
-        print('Error>>>', e)
-        return 500, {"message": f"Following error occured>> {e}"}
+    # try:
+    question = query_params.model_dump()['question']
+    retriever = get_retriever2(question=question, persist_directory="docs_chromadb")
+    answer = rag(retriever, llm, question=question)
+    return {"answer": answer}
+    # except Exception as e:
+    #     print('Error>>>', e)
+    #     return 500, {"message": f"Following error occured>> {e}"}
 
 @app.post('/embeed')
 def embeed(json_file: JsonFile):
