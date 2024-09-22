@@ -198,11 +198,11 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
         question (str): question of RAG
         persist_directory (str): name of database
     '''
-    
-    model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
+    embeddings_model = OllamaEmbeddings(model="mistral", base_url='http://0.0.0.0:11434',) ## llama 3.1
+    model = mistral7b_llm()
 
     vectorstore = Chroma(persist_directory=persist_directory,
-                        embedding_function=model
+                        embedding_function=embeddings_model
                         )
     document_content_description = "Indicators related to a country"
 
@@ -211,5 +211,5 @@ def get_retriever2(question, persist_directory="docs_chromadb"):
         )
     docs = retriever.invoke(question)
     print("docs>>", docs)
-    time.sleep(10)
+    time.sleep()
     return retriever
