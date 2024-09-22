@@ -88,6 +88,10 @@ def load_json(json_obj, filename):
 
     return documents
 
+def metadata_func(record: dict, metadata: dict) -> dict:
+    metadata["Country"] = record.get("CountryName")
+    return metadata
+
 def load_json2(json_obj, filename):
     '''Read documents from json object and split them into chunks
 
@@ -104,11 +108,12 @@ def load_json2(json_obj, filename):
 
     with open(file_path, 'w') as f:
         json.dump(data, f)
-
+    
     loader = JSONLoader(
             file_path=file_path,
             jq_schema='.[]',
-            text_content=False)
+            text_content=False,
+            metadata_func=metadata_func)
 
     documents = loader.load()
 
