@@ -169,13 +169,14 @@ def rag(retriever, llm, question):
 
 
     # Question
-    qa_chain = RetrievalQA.from_chain_type(llm=llm,
-                                    chain_type="stuff",
-                                    retriever=retriever,
-                                    return_source_documents=True,
-                                    verbose=True)
+    # qa_chain = RetrievalQA.from_chain_type(llm=llm,
+    #                                 chain_type="stuff",
+    #                                 retriever=retriever,
+    #                                 return_source_documents=True,
+    #                                 verbose=True)
     
-    llm_response = qa_chain(question)
+    # llm_response = qa_chain(question)
+    llm_response = retriever.invoke(question)
     print("llm_response>>", llm_response)
     print("llm_response>>", llm_response.keys())
     print("source docs len >>", len(llm_response["source_documents"]))
