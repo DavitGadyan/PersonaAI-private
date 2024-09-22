@@ -38,7 +38,7 @@ load_dotenv()
 
 metadata_field_info = [
     AttributeInfo(
-        name="country",
+        name="CountryName",
         description="The country of the record",
         type="string",
     ),
