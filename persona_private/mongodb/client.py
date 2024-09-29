@@ -63,7 +63,7 @@ def create_database_table(db_name="docs", table_name="jsons"):
         print(f"Collection '{table_name}' does not exist in database '{db_name}'. It will be created.")
     
     collection = db[table_name]  # Get or create the collection
-    return f"Database {db_name} and collection {table_name} are created!!"
+    return collection
 
 
 def insert_data(data, table_name="jsons", db_name="docs"):
