@@ -60,7 +60,7 @@ def embeed(json_file: JsonFile):
 
     # insert into MongoDB
     status = insert_data(data=json_obj)
-    
+    print("status>>", status)
     docs = load_json2(json_obj=json_obj, filename=filename)
 
     retriever = doc2chroma(docs=docs, persist_directory="docs_chromadb")
