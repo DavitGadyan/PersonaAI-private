@@ -19,6 +19,7 @@ results = collection.aggregate([
                     "$arrayElemAt": [
                         { "$split": ["$moi.FileAttachmentString", " "] },
                         # index of the numeric value in the split array
+                        0  # replace 0 with the correct index
                     ]
                 }
             }
@@ -34,6 +35,7 @@ results = collection.aggregate([
     { "$limit": 3 },
     { "$project": { "_id": 0, "CountryName": "$_id", "moi": 1 } }
 ])
+
 
 # Print the results
 print("The top 3 countries with the highest 'moi' value are:")
