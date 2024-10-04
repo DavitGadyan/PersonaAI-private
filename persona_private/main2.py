@@ -16,10 +16,16 @@ results = collection.aggregate([
         "$addFields": {
             "moi": {
                 "$toDouble": {
-                    "$arrayElemAt": [
-                        { "$split": ["$moi.FileAttachmentString", " "] },
-                        # index of the numeric value in the split array
-                        0  # replace 0 with the correct index
+                    "$ifNull": [
+                        {
+                            "$arrayElemAt": [
+                                { "$split": ["$moi.FileAttachmentString", " "] },
+                                # index of the numeric value in the split array
+                                0  # replace 0 with the correct index
+                            ]
+                        },
+                        # default value if the split array doesn't contain a numeric value at the specified index
+                        0  # replace 0 with an appropriate default value
                     ]
                 }
             }
@@ -35,6 +41,7 @@ results = collection.aggregate([
     { "$limit": 3 },
     { "$project": { "_id": 0, "CountryName": "$_id", "moi": 1 } }
 ])
+
 
 
 # Print the results
