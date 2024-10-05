@@ -45,8 +45,9 @@ results = collection.aggregate([
     },
     { "$sort": { "moi": -1 } },
     { "$limit": 3 },
-    { "$project": { "_id": 0, "CountryName": "$_id", "moi": 1 } }
+    { "$project": { "_id": 0, "CountryName": "$_id" } }
 ])
+
 
 
 
