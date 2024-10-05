@@ -22,11 +22,17 @@ results = collection.aggregate([
                     "if": { "$eq": ["$moi.QWorkString", ""] },
                     "then": "$$REMOVE",
                     "else": {
-                        "$toInt": {
+                        "$toDouble": {
                             "$ifNull": [
                                 {
                                     "$arrayElemAt": [
-                                        { "$split": ["$moi.QWorkString", " "] },
+                                        {
+                                            "$filter": {
+                                                "input": { "$split": ["$moi.QWorkString", " "] },
+                                                "as": "element",
+                                                "cond": { "$regexMatch": { "input": "$$element", "regex": "^\\d+(\\.\\d+)?$" } }
+                                            }
+                                        },
                                         # index of the numeric value in the split array
                                         0  # replace 0 with the correct index
                                     ]
