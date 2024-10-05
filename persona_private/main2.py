@@ -45,8 +45,33 @@ results = collection.aggregate([
     },
     { "$sort": { "moi": -1 } },
     { "$limit": 3 },
-    { "$project": { "_id": 0, "CountryName": "$_id" } }
+    {
+        "$project": {
+            "_id": 0,
+            "CountryName": "$_id",
+            "excludedKeys": { "$objectToArray": "$$ROOT" },
+        }
+    },
+    {
+        "$project": {
+            "CountryName": 1,
+            "excludedKeys": {
+                "$filter": {
+                    "input": "$excludedKeys",
+                    "as": "key",
+                    "cond": { "$not": { "$regexMatch": { "input": "$$key.k", "regex": "FileAttachment" } } }
+                }
+            }
+        }
+    },
+    {
+        "$project": {
+            "CountryName": 1,
+            "excludedKeys": { "$arrayToObject": "$excludedKeys" }
+        }
+    }
 ])
+
 
 
 
