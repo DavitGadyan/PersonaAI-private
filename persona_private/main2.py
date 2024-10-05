@@ -33,6 +33,13 @@ results = collection.aggregate([
                             ]
                         }
                     }
+                },
+                "moi_error": {
+                    "$cond": {
+                        "if": { "$eq": ["$moi", "$$REMOVE"] },
+                        "then": "Error accessing subfield for moi",
+                        "else": ""
+                    }
                 }
             }
         }
@@ -40,7 +47,8 @@ results = collection.aggregate([
     {
         "$group": {
             "_id": "$CountryName",
-            "moi": { "$avg": "$moi" }
+            "moi": { "$avg": "$moi" },
+            "moi_errors": { "$push": "$moi_error" }
         }
     },
     { "$sort": { "moi": -1 } },
@@ -49,28 +57,18 @@ results = collection.aggregate([
         "$project": {
             "_id": 0,
             "CountryName": "$_id",
-            "excludedKeys": { "$objectToArray": "$$ROOT" },
-        }
-    },
-    {
-        "$project": {
-            "CountryName": 1,
-            "excludedKeys": {
+            "moi": 1,
+            "moi_errors": {
                 "$filter": {
-                    "input": "$excludedKeys",
-                    "as": "key",
-                    "cond": { "$not": { "$regexMatch": { "input": "$$key.k", "regex": "FileAttachment" } } }
+                    "input": "$moi_errors",
+                    "as": "error",
+                    "cond": { "$ne": ["$$error", ""] }
                 }
             }
         }
-    },
-    {
-        "$project": {
-            "CountryName": 1,
-            "excludedKeys": { "$arrayToObject": "$excludedKeys" }
-        }
     }
 ])
+
 
 
 
