@@ -40,6 +40,14 @@ def mistral7b_llm():
     
     return llm
 
+def codestral_llm():
+    llm = Ollama(  model="codestral",
+                    #model='Llama2',
+                    callback_manager = CallbackManager([StreamingStdOutCallbackHandler()]))
+    
+    
+    return llm
+
 # def mistral7b_llm():
 #     '''Load LLM Mistral 7B
 #     '''
