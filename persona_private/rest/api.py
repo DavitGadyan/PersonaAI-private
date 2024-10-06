@@ -593,13 +593,11 @@ def process_general(query_params: QueryParams):
         }
     }
 
-    ## Example:
-
-    Question:
+    Example Question:
     
     What are top 3 countries by moi?
 
-    Answer:
+    Example Answer:
     from pymongo import MongoClient
 
     # Create a connection to the MongoDB server
