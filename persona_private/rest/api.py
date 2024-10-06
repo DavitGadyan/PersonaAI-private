@@ -593,11 +593,7 @@ def process_general(query_params: QueryParams):
         }
     }
 
-    Example Question:
-    
-    What are top 3 countries by moi?
-
-    Example Answer:
+    Reference code:
     from pymongo import MongoClient
 
     # Create a connection to the MongoDB server
@@ -610,54 +606,13 @@ def process_general(query_params: QueryParams):
     collection = db['jsons']
 
     results = collection.aggregate([
-        { "$unwind": "$moi" },
-        {
-            "$addFields": {
-                "moi": {
-                    "$cond": {
-                        "if": { "$eq": ["$moi.QWorkString", ""] },
-                        "then": "$$REMOVE",
-                        "else": {
-                            "$toDouble": {
-                                "$ifNull": [
-                                    {
-                                        "$arrayElemAt": [
-                                            {
-                                                "$filter": {
-                                                    "input": { "$split": ["$moi.QWorkString", " "] },
-                                                    "as": "element",
-                                                    "cond": { "$regexMatch": { "input": "$$element", "regex": "^\\d+(\\.\\d+)?$" } }
-                                                }
-                                            },
-                                            # index of the numeric value in the split array
-                                            0  # replace 0 with the correct index
-                                        ]
-                                    },
-                                    # default value if the split array doesn't contain a numeric value at the specified index
-                                    0  # replace 0 with an appropriate default value
-                                ]
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        {
-            "$group": {
-                "_id": "$CountryName",
-                "moi": { "$avg": "$moi" }
-            }
-        },
-        { "$sort": { "moi": -1 } },
-        { "$limit": 3 },
-        { "$project": { "_id": 0, "CountryName": "$_id", "moi": 1 } }
+       
     ])
 
 
     # Print the results
-    print("The top 3 countries with the highest 'moi' value are:")
     for i, result in enumerate(results):
-        print(f"{i+1}. {result['CountryName']} ({result['moi']})")
+        print(f"{i+1}. {result['CountryName']} ")
 
 
         
