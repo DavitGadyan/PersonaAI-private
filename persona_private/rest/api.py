@@ -617,7 +617,7 @@ def process_general(query_params: QueryParams):
 
         
     '''
-    answer = llm.invoke(prompt)
+    answer = code_llm.invoke(prompt)
 
     return {"answer": answer}
 
